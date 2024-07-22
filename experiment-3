@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+int countNodes(Node* head) {
+    int count = 0;
+    Node* temp = head;
+    while (temp!= NULL) {
+        count++;
+        temp = temp->next;
+    }
+    return count;
+}
+
+int main() {
+    Node* head = NULL;
+    Node* temp = NULL;
+    Node* last = NULL;
+
+    // Create the linked list: 1->2->3->5->8
+    for (int i = 1; i <= 8; i += (i == 3? 2 : 1)) {
+        temp = (Node*) malloc(sizeof(Node));
+        temp->data = i;
+        temp->next = NULL;
+        if (head == NULL) {
+            head = temp;
+        } else {
+            last->next = temp;
+        }
+        last = temp;
+    }
+
+    int numNodes = countNodes(head);
+    printf("Number of nodes in the linked list: %d\n", numNodes);
+
+    return 0;
+}
