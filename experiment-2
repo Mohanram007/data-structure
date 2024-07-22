@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_VERTICES 1000
+
+typedef struct {
+    int data;
+    struct Node* next;
+} Node;
+
+typedef struct {
+    Node* head;
+} AdjList;
+
+typedef struct {
+    AdjList* array;
+} Graph;
+
+Graph* createGraph(int numVertices) {
+    Graph* graph = (Graph*) malloc(sizeof(Graph));
+    graph->array = (AdjList*) malloc(numVertices * sizeof(AdjList));
+    for (int i = 0; i < numVertices; i++) {
+        graph->array[i].head = NULL;
+    }
+    return graph;
+}
+
+void addEdge(Graph* graph, int src, int dest) {
+    Node* newNode = (Node*) malloc(sizeof(Node));
+    newNode->data = dest;
+    newNode->next = graph->array[src].head;
+    graph->array[src].head = newNode;
+
+    newNode = (Node*) malloc(sizeof(Node));
+    newNode->data = src;
+    newNode->next = graph->array[dest].head;
+    graph->array[dest].head = newNode;
+}
+
+void BFS(Graph* graph, int startVertex, int endVertex) {
+    bool visited[MAX_VERTICES];
+    int distance[MAX_VERTICES];
+    for (int i = 0; i < MAX_VERTICES; i++) {
+        visited[i] = false;
+        distance[i] = -1;
+    }
+
+    visited[startVertex] = true;
+    distance[startVertex] = 0;
+
+    Node* queue[MAX_VERTICES];
+    int front = 0, rear = 0;
+    queue[rear++] = graph->array[startVertex].head;
+
+    while (front < rear) {
+        Node* currNode = queue[front++];
+        while (currNode != NULL) {
+            int currVertex = currNode->data;
+            if (!visited[currVertex]) {
+                visited[currVertex] = true;
+                distance[currVertex] = distance[currNode->data] + 1;
+                queue[rear++] = graph->array[currVertex].head;
+            }
+            currNode = currNode->next;
+        }
+    }
+
+    printf("Minimum number of edges between %d and %d is %d\n", startVertex, endVertex, distance[endVertex]);
+}
+
+int main() {
+    int numVertices, numEdges;
+    printf("Enter the number of vertices: ");
+    scanf("%d", &numVertices);
+    printf("Enter the number of edges: ");
+    scanf("%d", &numEdges);
+
+    Graph* graph = createGraph(numVertices);
+
+    printf("Enter the edges:\n");
+    for (int i = 0; i < numEdges; i++) {
+        int src, dest;
+        scanf("%d %d", &src, &dest);
+        addEdge(graph, src, dest);
+    }
+
+    int startVertex, endVertex;
+    printf("Enter the start and end vertices: ");
+    scanf("%d %d", &startVertex, &endVertex);
+
+    BFS(graph, startVertex, endVertex);
+
+    return 0;
+}
