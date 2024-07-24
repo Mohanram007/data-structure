@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int find_missing_positive(int arr[], int n) {
+    int i;
+    for (i = 0; i < n; i++) {
+        while (arr[i] > 0 && arr[i] <= n && arr[arr[i] - 1] != arr[i]) {
+            int temp = arr[arr[i] - 1];
+            arr[arr[i] - 1] = arr[i];
+            arr[i] = temp;
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        if (arr[i] != i + 1) {
+            return i + 1;
+        }
+    }
+
+    return n + 1;
+}
+
+int main() {
+    int arr[] = {2, 3, 7, 6, 8, -1, -10, 15};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int missing_positive = find_missing_positive(arr, n);
+    printf("The smallest positive number missing from the array is %d\n", missing_positive);
+
+    int arr2[] = {2, 3, -7, 6, 8, 1, -10, 15};
+    int n2 = sizeof(arr2) / sizeof(arr2[0]);
+    missing_positive = find_missing_positive(arr2, n2);
+    printf("The smallest positive number missing from the array is %d\n", missing_positive);
+
+    int arr3[] = {1, 1, 0, -1, -2};
+    int n3 = sizeof(arr3) / sizeof(arr3[0]);
+    missing_positive = find_missing_positive(arr3, n3);
+    printf("The smallest positive number missing from the array is %d\n", missing_positive);
+
+    return 0;
+}
