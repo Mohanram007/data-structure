@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for a tree node
+typedef struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+} TreeNode;
+
+// Function to construct the binary tree
+TreeNode* buildTree(int* preorder, int preorderSize, int* inorder, int inorderSize) {
+    if (preorderSize == 0) {
+        return NULL;
+    }
+
+    // Create the root node
+    TreeNode* root = (TreeNode*)malloc(sizeof(TreeNode));
+    root->val = preorder[0];
+
+    // Find the index of the root in the inorder array
+    int idx = 0;
+    while (inorder[idx]!= preorder[0]) {
+        idx++;
+    }
+
+    // Recursively construct the left and right subtrees
+    root->left = buildTree(preorder + 1, idx, inorder, idx);
+    root->right = buildTree(preorder + idx + 1, preorderSize - idx - 1, inorder + idx + 1, inorderSize - idx - 1);
+
+    return root;
+}
+
+// Function to print the binary tree in preorder
+void printTree(TreeNode* root) {
+    if (root == NULL) {
+        printf("null, ");
+        return;
+    }
+
+    printf("%d, ", root->val);
+    printTree(root->left);
+    printTree(root->right);
+}
+
+int main() {
+    int preorder[] = {3, 9, 20, 15, 7};
+    int inorder[] = {9, 3, 15, 20, 7};
+    int preorderSize = sizeof(preorder) / sizeof(preorder[0]);
+    int inorderSize = sizeof(inorder) / sizeof(inorder[0]);
+
+    TreeNode* root = buildTree(preorder, preorderSize, inorder, inorderSize);
+    printTree(root);
+
+    return 0;
+}
