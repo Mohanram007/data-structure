@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_CHARS 256  // Assuming ASCII characters
+
+void char_frequency(char *s) {
+    int frequency[MAX_CHARS] = {0};  // Initialize frequency array with zeros
+
+    for (int i = 0; s[i] != '\0'; i++) {
+        frequency[(int)s[i]]++;  // Increment frequency of each character
+    }
+
+    for (int i = 0; i < MAX_CHARS; i++) {
+        if (frequency[i] > 0) {
+            printf("%c -> %d\n", (char)i, frequency[i]);  // Print character and frequency
+        }
+    }
+}
+
+int main() {
+    char s[] = "tree";
+    char_frequency(s);
+    return 0;
+}
